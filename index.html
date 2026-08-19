@@ -688,6 +688,7 @@
             type="email"
             id="emailInput"
             placeholder="you@email.com"
+            name="email"
             required
             aria-label="Email address" />
           <button
@@ -712,15 +713,27 @@
     </section>
 
     <footer>© 2026 GoNoFomo. Find people to do things with.</footer>
-
     <script>
       document.getElementById('waitlistForm').addEventListener('submit', function(e){
         e.preventDefault();
-        var email = document.getElementById('emailInput').value;
-        // TODO: replace this block with a real POST to your waitlist backend
-        console.log('Waitlist signup (placeholder):', email);
-        document.getElementById('successMsg').style.display = 'block';
-        this.reset();
+        var form = this;
+
+        fetch('https://formspree.io/f/mqpzwyla', {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: new FormData(form)
+        })
+        .then(function(response){
+          if (response.ok) {
+            document.getElementById('successMsg').style.display = 'block';
+            form.reset();
+          } else {
+            alert('Something went wrong — try again.');
+          }
+        })
+        .catch(function(){
+          alert('Something went wrong — try again.');
+        });
       });
 
       var header = document.getElementById('siteHeader');
